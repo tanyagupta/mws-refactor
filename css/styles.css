@@ -6,7 +6,6 @@ body,td,th,p{
 	font-size: 10pt;
 	color: #333;
 	line-height: 1.5;
-	background-color: yellow;
 }
 body {
 	background-color: #fdfdfd;
@@ -48,7 +47,6 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   padding: 25px;
   text-align: center;
   text-transform: uppercase;
- 
 }
 /* ====================== Navigation ====================== */
 nav {
@@ -277,7 +275,6 @@ nav h1 a {
 }
 
 
-
 /* start responsive */
 
 body, html {
@@ -303,10 +300,10 @@ section {
 }
 @media screen and (max-width: 400) {
   nav{
-   font-size: 10px; 
-    
+   font-size: 10px;
+
   }
   
-  
-  
+
+
 }
