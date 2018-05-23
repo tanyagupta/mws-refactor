@@ -6,6 +6,7 @@ body,td,th,p{
 	font-size: 10pt;
 	color: #333;
 	line-height: 1.5;
+	background-color: yellow;
 }
 body {
 	background-color: #fdfdfd;
@@ -47,6 +48,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   padding: 25px;
   text-align: center;
   text-transform: uppercase;
+ 
 }
 /* ====================== Navigation ====================== */
 nav {
@@ -272,4 +274,39 @@ nav h1 a {
 }
 #restaurant-hours td {
   color: #666;
+}
+
+
+
+/* start responsive */
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+section {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+#footer{
+ background-color: #444;
+  color: #aaa;
+  font-size: 8pt;
+  letter-spacing: 1px;
+  padding: 25px;
+  text-align: center;
+  text-transform: uppercase;
+}
+@media screen and (max-width: 400) {
+  nav{
+   font-size: 10px; 
+    
+  }
+  
+  
+  
 }
