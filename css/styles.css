@@ -301,10 +301,11 @@ body, html {
   text-transform: uppercase;
 }
 .inside #map-container{
-	order:1;
+/*	order:1;
 	display: flex;
 	width: 100%;
 	flex-wrap: wrap;
+	*/
 }
 
 #restaurant-container, #reviews-container{
@@ -312,6 +313,14 @@ body, html {
 	display: flex;
 	flex-wrap: wrap;
 
+}
+.inside #footer {
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+}
+html,body{
+	background-color:blue;
 }
 @media screen and (max-width: 400) {
 
