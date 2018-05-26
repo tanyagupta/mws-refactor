@@ -10,7 +10,7 @@
 <body>
   <header>
     <nav>
-      <h1><a id="page_title" href="/">Restaurant Reviews</a></h1>   
+      <h1><a href="/">Restaurant Reviews</a></h1>
     </nav>
   </header>
 
@@ -19,8 +19,9 @@
       <div id="map"></div>
     </section>
     <section>
-      <div class="filter-options">
+      <div class="filter-options flexcontent">
         <h2>Filter Results</h2>
+        <div class="sectionselect">
         <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
           <option value="all">All Neighborhoods</option>
         </select>
@@ -28,6 +29,7 @@
           <option value="all">All Cuisines</option>
         </select>
       </div>
+    </div>
       <ul id="restaurants-list"></ul>
     </section>
   </main>
@@ -44,3 +46,17 @@
 </body>
 
 </html>
+<script>
+/*
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('serviceworker.js')
+    .then(function(registration) {
+      console.log('Service Worker registration successful with scope: ',
+      registration.scope);
+    })
+    .catch(function(err) {
+      console.log('Service Worker registration failed: ', err);
+    });
+}
+*/
+</script>

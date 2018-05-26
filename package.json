@@ -1,0 +1,32 @@
+{
+  "name": "mws-restaurant-stage-1",
+  "version": "1.0.0",
+  "description": "phase1",
+  "main": "Gruntfile.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-nodeunit": "^0.4.1",
+    "grunt-contrib-uglify": "^0.5.1"
+  },
+  "devDependencies": {
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-responsive-images": "^1.10.1"
+  },
+  "scripts": {
+    "test": "tap test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tanyagupta/mws-restaurant-stage-1.git"
+  },
+  "author": "Tanya Gupta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tanyagupta/mws-restaurant-stage-1/issues"
+  },
+  "homepage": "https://github.com/tanyagupta/mws-restaurant-stage-1#readme"
+}

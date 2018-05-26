@@ -137,11 +137,31 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  */
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
+  const picture = document.createElement('picture');
+  const source = document.createElement('source');
+  source.media = "(min-width: 320px)"
+  picture.append(source)
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
+
+  const img_name = restaurant.photograph;
+  const img_num=img_name.split('.')[0].toString()
+  image.srcset  =
+  "dest/img/"+img_num+"-256.jpg 256w, "
+  "dest/img/"+img_num+"-320.jpg 320w, "+
+  "dest/img/"+img_num+"-640.jpg 640w,"+"dest/img/"+img_num+"-1024.jpg 1024w";
+  image.sizes="10vw"
+
+
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  li.append(image);
+
+  //image.srcset = "dest/320/1.jpg 100w, dest/640/1.jpg 200w"
+  picture.append(image)
+
+
+  li.append(picture);
+    console.log(li)
 
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;
