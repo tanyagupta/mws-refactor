@@ -75,11 +75,14 @@ window.initMap = () => {
     lat: 40.722216,
     lng: -73.987501
   };
-  self.map = new google.maps.Map(document.getElementById('map'), {
+  const map = document.getElementById('map');
+  map.title="restaurants map"
+  self.map = new google.maps.Map(map, {
     zoom: 12,
     center: loc,
     scrollwheel: false
   });
+
   updateRestaurants();
 }
 
@@ -144,6 +147,7 @@ createRestaurantHTML = (restaurant) => {
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
+  image.alt = "restaurant "+restaurant.name;
 
   const img_name = restaurant.photograph;
   const img_num=img_name.split('.')[0].toString()

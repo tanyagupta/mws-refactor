@@ -14,6 +14,7 @@ window.initMap = () => {
         center: restaurant.latlng,
         scrollwheel: false
       });
+
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
@@ -141,6 +142,7 @@ createReviewHTML = (review) => {
   li.appendChild(rating);
 
   const comments = document.createElement('p');
+  comments.classList.add("review_text")
   comments.innerHTML = review.comments;
   li.appendChild(comments);
   console.log(li)
