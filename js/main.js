@@ -139,7 +139,7 @@ createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
   const picture = document.createElement('picture');
   const source = document.createElement('source');
-  source.media = "(min-width: 320px)"
+  source.media = "(min-width: 224px)"
   picture.append(source)
 
   const image = document.createElement('img');
