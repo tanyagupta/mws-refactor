@@ -142,8 +142,10 @@ createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
   const picture = document.createElement('picture');
   const source = document.createElement('source');
-  source.media = "(min-width: 224px)"
-  picture.append(source)
+ // source.media = "(min-width: 224px)"
+ source.media = "(min-width: 320px)"
+  picture.append(source);
+ 
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
@@ -155,8 +157,8 @@ createRestaurantHTML = (restaurant) => {
   "dest/img/"+img_num+"-256.jpg 256w, "
   "dest/img/"+img_num+"-320.jpg 320w, "+
   "dest/img/"+img_num+"-640.jpg 640w,"+"dest/img/"+img_num+"-1024.jpg 1024w";
-  image.sizes="10vw"
-
+  image.sizes="50vw"
+  /* vw: hundredths of the viewport width. so 10vw is 10% of viewport size */
 
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
 
@@ -165,9 +167,9 @@ createRestaurantHTML = (restaurant) => {
 
 
   li.append(picture);
-    console.log(li)
 
-  const name = document.createElement('h1');
+
+  const name = document.createElement('h3');
   name.innerHTML = restaurant.name;
   li.append(name);
 
@@ -180,7 +182,8 @@ createRestaurantHTML = (restaurant) => {
   li.append(address);
 
   const more = document.createElement('a');
-  more.innerHTML = 'View Details';
+  console.log(restaurant.name)
+  more.innerHTML = restaurant.name+" info";
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more)
 

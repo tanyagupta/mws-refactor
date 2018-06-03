@@ -20,10 +20,10 @@
      'js/restaurant_info.js'
    ];
 
-   var staticCacheName = 'pages-cache-v2';
+   var staticCacheName = 'pages-cache-v3';
 
    self.addEventListener('install', function(event) {
-     console.log('Attempting to install service worker and cache static assets');
+     //console.log('Attempting to install service worker and cache static assets');
      event.waitUntil(
        caches.open(staticCacheName)
        .then(function(cache) {
@@ -33,17 +33,17 @@
    });
 
    self.addEventListener('fetch', function(event) {
-     console.log('Fetch event for ', event.request.url);
+     //console.log('Fetch event for ', event.request.url);
      event.respondWith(
        caches.match(event.request).then(function(response) {
-         console.log(response)
+         //console.log(response)
          if (response) {
-           console.log('Found ', event.request.url, ' in cache');
+           //console.log('Found ', event.request.url, ' in cache');
            return response;
          }
-         console.log('Network request for ', event.request.url);
+         //console.log('Network request for ', event.request.url);
          return fetch(event.request).then(function(response) {
-           console.log("404 expected",response.status)
+           //console.log("404 expected",response.status)
            if (response.status === 404) {
              return caches.match('static/pages/404.html');
            }
@@ -71,6 +71,7 @@
      caches.keys().then(function(cacheNames) {
        return Promise.all(
          cacheNames.map(function(cacheName) {
+             console.log(cacheName)
            if (cacheWhitelist.indexOf(cacheName) === -1) {
              return caches.delete(cacheName);
            }

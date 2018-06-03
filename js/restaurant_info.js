@@ -57,7 +57,17 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   address.innerHTML = restaurant.address;
 
   const image = document.getElementById('restaurant-img');
-  image.className = 'restaurant-img'
+  image.className = 'restaurant-img';
+  image.alt = "restaurant "+restaurant.name;
+  const img_name = restaurant.photograph;
+  const img_num=img_name.split('.')[0].toString()
+   image.srcset  =
+  "dest/img/"+img_num+"-256.jpg 256w, "
+  "dest/img/"+img_num+"-320.jpg 320w, "+
+  "dest/img/"+img_num+"-640.jpg 640w,"+"dest/img/"+img_num+"-1024.jpg 1024w";
+  image.sizes="10vw"
+
+  
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
 
   const cuisine = document.getElementById('restaurant-cuisine');
@@ -156,6 +166,7 @@ fillBreadcrumb = (restaurant=self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
+  li.setAttribute("aria-current","page")
   breadcrumb.appendChild(li);
 }
 

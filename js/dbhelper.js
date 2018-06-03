@@ -9,7 +9,8 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 8000 // Change this to your server port
-    return 'http://127.0.0.1:8000/data/restaurants.json'
+    return  "https://projects-2018-tanyagupta.c9users.io/MWS/mws-restaurant-stage-1/data/restaurants.json"
+    //return 'http://127.0.0.1:8000/data/restaurants.json'
     //return `http://localhost:${port}/data/restaurants.json`;
   }
 
