@@ -10,10 +10,11 @@ var map;
 window.initMap = () => {
 
   fetchRestaurantFromURL((error, restaurant) => {
+
     if (error) { // Got an error!
       console.error(error);
     } else {
-
+      console.log(restaurant)
       self.map = new google.maps.Map(document.getElementById('map'), {
         zoom: 16,
         center: restaurant.latlng,
@@ -30,19 +31,23 @@ window.initMap = () => {
  * Get current restaurant from page URL.
  */
 fetchRestaurantFromURL = (callback) => {
+
   if (self.restaurant) { // restaurant already fetched!
     callback(null, self.restaurant)
     return;
   }
+
   const id = getParameterByName('id');
+
+//  const id = (self.window.location.href).substring((self.window.location.href).indexOf("=")+1,(self.window.location.href).length)
   if (!id) { // no id found in URL
     error = 'No restaurant id in URL'
     callback(error, null);
   } else {
-    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+       DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
-        console.error(error);
+        console.log(error);
         return;
       }
 
@@ -175,12 +180,15 @@ fillBreadcrumb = (restaurant=self.restaurant) => {
   li.innerHTML = restaurant.name;
   li.setAttribute("aria-current","page")
   breadcrumb.appendChild(li);
+
 }
 
 /**
  * Get a parameter by name from page URL.
  */
 getParameterByName = (name, url) => {
+  //console.log(name);
+  //console.log(url)
   if (!url)
     url = window.location.href;
   name = name.replace(/[\[\]]/g, '\\$&');

@@ -3,6 +3,7 @@
    var filesToCache = [
      'index.html',
      'restaurant.html',
+     'manifest.json',
      'img/1.jpg',
      'img/2.jpg',
      'img/3.jpg',
@@ -21,7 +22,7 @@
      'js/restaurant_info.js'
    ];
 
-   var staticCacheName = 'pages-cache-v3';
+   var staticCacheName = 'pages-cache-v4';
 
    self.addEventListener('install', function(event) {
      //console.log('Attempting to install service worker and cache static assets');

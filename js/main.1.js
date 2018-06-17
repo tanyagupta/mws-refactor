@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 fetchNeighborhoods = () => {
 
   DBHelper.fetchNeighborhoods((error, neighborhoods) => {
-
     //["Manhattan", "Brooklyn", "Queens"]
     if (error) { // Got an error
       console.error(error);
@@ -29,6 +28,7 @@ fetchNeighborhoods = () => {
       fillNeighborhoodsHTML();
     }
   });
+  //})
 }
 
 /**
@@ -96,6 +96,7 @@ window.initMap = () => {
  * Update page and map for current restaurants.
  */
 updateRestaurants = () => {
+
   const cSelect = document.getElementById('cuisines-select');
   const nSelect = document.getElementById('neighborhoods-select');
 
@@ -104,7 +105,7 @@ updateRestaurants = () => {
 
   const cuisine = cSelect[cIndex].value;
   const neighborhood = nSelect[nIndex].value;
-
+  
   DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
 
 
