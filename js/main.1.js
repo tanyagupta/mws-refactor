@@ -8,6 +8,7 @@ var markers = []
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
+
   fetchNeighborhoods();
   fetchCuisines();
 });
@@ -16,11 +17,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
  * Fetch all neighborhoods and set their HTML.
  */
 fetchNeighborhoods = () => {
+
   DBHelper.fetchNeighborhoods((error, neighborhoods) => {
+
+    //["Manhattan", "Brooklyn", "Queens"]
     if (error) { // Got an error
       console.error(error);
     } else {
       self.neighborhoods = neighborhoods;
+      //self.neighborhoods = ["Manhattan", "Brooklyn", "Queens"]
       fillNeighborhoodsHTML();
     }
   });
@@ -30,6 +35,7 @@ fetchNeighborhoods = () => {
  * Set neighborhoods HTML.
  */
 fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
+
   const select = document.getElementById('neighborhoods-select');
   neighborhoods.forEach(neighborhood => {
     const option = document.createElement('option');
@@ -44,6 +50,7 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
  */
 fetchCuisines = () => {
   DBHelper.fetchCuisines((error, cuisines) => {
+    //["Asian", "Pizza", "American", "Mexican"]
     if (error) { // Got an error!
       console.error(error);
     } else {
@@ -58,7 +65,6 @@ fetchCuisines = () => {
  */
 fillCuisinesHTML = (cuisines = self.cuisines) => {
   const select = document.getElementById('cuisines-select');
-
   cuisines.forEach(cuisine => {
     const option = document.createElement('option');
     option.innerHTML = cuisine;
@@ -100,6 +106,25 @@ updateRestaurants = () => {
   const neighborhood = nSelect[nIndex].value;
 
   DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
+
+
+    /*
+
+    0: {id: 1, name: "Mission Chinese Food", neighborhood: "Manhattan", photograph: "1.jpg", address: "171 E Broadway, New York, NY 10002", …}
+1: {id: 2, name: "Emily", neighborhood: "Brooklyn", photograph: "2.jpg", address: "919 Fulton St, Brooklyn, NY 11238", …}
+2: {id: 3, name: "Kang Ho Dong Baekjeong", neighborhood: "Manhattan", photograph: "3.jpg", address: "1 E 32nd St, New York, NY 10016", …}
+3: {id: 4, name: "Katz's Delicatessen", neighborhood: "Manhattan", photograph: "4.jpg", address: "205 E Houston St, New York, NY 10002", …}
+4: {id: 5, name: "Roberta's Pizza", neighborhood: "Brooklyn", photograph: "5.jpg", address: "261 Moore St, Brooklyn, NY 11206", …}
+5: {id: 6, name: "Hometown BBQ", neighborhood: "Brooklyn", photograph: "6.jpg", address: "454 Van Brunt St, Brooklyn, NY 11231", …}
+6: {id: 7, name: "Superiority Burger", neighborhood: "Manhattan", photograph: "7.jpg", address: "430 E 9th St, New York, NY 10009", …}
+7: {id: 8, name: "The Dutch", neighborhood: "Manhattan", photograph: "8.jpg", address: "131 Sullivan St, New York, NY 10012", …}
+8: {id: 9, name: "Mu Ramen", neighborhood: "Queens", photograph: "9.jpg", address: "1209 Jackson Ave, Queens, NY 11101", …}
+9: {id: 10, name: "Casa Enrique", neighborhood: "Queens", photograph: "10.jpg", address: "5-48 49th Ave, Queens, NY 11101", …}
+length: 10
+
+
+
+    */
     if (error) { // Got an error!
       console.error(error);
     } else {
@@ -145,18 +170,20 @@ createRestaurantHTML = (restaurant) => {
  // source.media = "(min-width: 224px)"
  source.media = "(min-width: 320px)"
   picture.append(source);
- 
+
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.alt = "restaurant "+restaurant.name;
 
   const img_name = restaurant.photograph;
-  const img_num=img_name.split('.')[0].toString()
+
+//  const img_num=img_name.split('.')[0].toString()
+  const img_num = restaurant.id;
   image.srcset  =
-  "dest/img/"+img_num+"-256.jpg 256w, "
-  "dest/img/"+img_num+"-320.jpg 320w, "+
-  "dest/img/"+img_num+"-640.jpg 640w,"+"dest/img/"+img_num+"-1024.jpg 1024w";
+  "destmin/img/"+img_num+"-256.jpg 256w, "
+  "destmin/img/"+img_num+"-320.jpg 320w, "+
+  "destmin/img/"+img_num+"-640.jpg 640w,"+"destmin/img/"+img_num+"-1024.jpg 1024w";
   image.sizes="50vw"
   /* vw: hundredths of the viewport width. so 10vw is 10% of viewport size */
 
@@ -164,7 +191,7 @@ createRestaurantHTML = (restaurant) => {
 
   //image.srcset = "dest/320/1.jpg 100w, dest/640/1.jpg 200w"
   picture.append(image)
-
+  console.log(picture)
 
   li.append(picture);
 
@@ -182,7 +209,7 @@ createRestaurantHTML = (restaurant) => {
   li.append(address);
 
   const more = document.createElement('a');
-  console.log(restaurant.name)
+  //console.log(restaurant.name)
   more.innerHTML = restaurant.name+" info";
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more)

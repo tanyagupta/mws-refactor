@@ -4,11 +4,16 @@ var map;
 /**
  * Initialize Google map, called from HTML.
  */
+
+
+
 window.initMap = () => {
+
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) { // Got an error!
       console.error(error);
     } else {
+
       self.map = new google.maps.Map(document.getElementById('map'), {
         zoom: 16,
         center: restaurant.latlng,
@@ -40,6 +45,7 @@ fetchRestaurantFromURL = (callback) => {
         console.error(error);
         return;
       }
+
       fillRestaurantHTML();
       callback(null, restaurant)
     });
@@ -60,14 +66,15 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   image.className = 'restaurant-img';
   image.alt = "restaurant "+restaurant.name;
   const img_name = restaurant.photograph;
+  console.log(img_name);
   const img_num=img_name.split('.')[0].toString()
    image.srcset  =
-  "dest/img/"+img_num+"-256.jpg 256w, "
-  "dest/img/"+img_num+"-320.jpg 320w, "+
-  "dest/img/"+img_num+"-640.jpg 640w,"+"dest/img/"+img_num+"-1024.jpg 1024w";
+  "destmin/img/"+img_num+"-256.jpg 256w, "
+  "destmin/img/"+img_num+"-320.jpg 320w, "+
+  "destmin/img/"+img_num+"-640.jpg 640w,"+"destmin/img/"+img_num+"-1024.jpg 1024w";
   image.sizes="10vw"
 
-  
+
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
 
   const cuisine = document.getElementById('restaurant-cuisine');
@@ -155,7 +162,7 @@ createReviewHTML = (review) => {
   comments.classList.add("review_text")
   comments.innerHTML = review.comments;
   li.appendChild(comments);
-  console.log(li)
+
   return li;
 }
 

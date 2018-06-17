@@ -10,10 +10,14 @@
     "grunt": "^0.4.5",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-nodeunit": "^0.4.1",
-    "grunt-contrib-uglify": "^0.5.1"
+    "grunt-contrib-uglify": "^0.5.1",
+    "imagemin": "^5.3.1",
+    "imagemin-jpegtran": "^5.0.2",
+    "imagemin-webp": "^4.1.0"
   },
   "devDependencies": {
     "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-imagemin": "^2.0.1",
     "grunt-responsive-images": "^1.10.1"
   },
   "scripts": {

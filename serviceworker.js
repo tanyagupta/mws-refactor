@@ -15,8 +15,9 @@
      'img/10.jpg',
      'css/styles.css',
      'data/restaurants.json',
-     'js/dbhelper.js',
-     'js/main.js',
+     'js/dbhelper.1.js',
+     'js/main.1.js',
+     'js/libs.js',
      'js/restaurant_info.js'
    ];
 
