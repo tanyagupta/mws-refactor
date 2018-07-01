@@ -135,7 +135,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     return;
   }
   const ul = document.getElementById('reviews-list');
-  console.log(reviews)
+  //console.log(reviews)
   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
@@ -167,7 +167,7 @@ createReviewHTML = (review) => {
 
   const date = document.createElement('p');
   date.classList.add("review_date")
-  console.log(review.updatedAt)
+  //console.log(review.updatedAt)
   const dateObj = new Date(review.updatedAt);
   const month = months[dateObj.getUTCMonth()];
   const day = dateObj.getUTCDate()
@@ -226,7 +226,8 @@ getParameterByName = (name, url) => {
 var btn = document.getElementById("sub_review");
 btn.onclick =
   function(){
-    const url = 'https://projects-2018-tanyagupta.c9users.io:8080/reviews'
+    //const url = 'https://projects-2018-tanyagupta.c9users.io:8080/reviews'
+    const url = 'http://localhost:1337/reviews'
     const name = document.getElementById("name").value;
     const restaurant_id = document.getElementById("id").value;
     const rating = document.getElementById("rating").value;
@@ -246,3 +247,5 @@ btn.onclick =
 
 
  }
+
+ 

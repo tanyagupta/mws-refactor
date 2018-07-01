@@ -69,7 +69,8 @@ function(){
    }
 
    function addReviews(){
-        const api_url = 'https://projects-2018-tanyagupta.c9users.io:8080/reviews';
+  //      const api_url = 'https://projects-2018-tanyagupta.c9users.io:8080/reviews';
+          const api_url = 'http://localhost:1337/reviews/';
            fetch(api_url)
              .then (response => {
 
@@ -128,7 +129,8 @@ function(){
    }
 
    function addRestaurants(){
-           const api_url = 'https://projects-2018-tanyagupta.c9users.io:8080/restaurants';
+            const api_url = "http://localhost:1337/restaurants/"
+           //const api_url = 'https://projects-2018-tanyagupta.c9users.io:8080/restaurants';
            fetch(api_url)
              .then (response => {
 

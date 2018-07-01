@@ -83,4 +83,25 @@
    );
  });
 
- })();
+ self.addEventListener('sync', function(event) {
+  if (event.tag == 'post-review') {
+    event.waitUntil(
+      
+      fetch('http://localhost:1337/reviews', {
+        method: 'POST',
+        body: JSON.stringify({'name':"foo",'restaurant_id':"1",'rating':"4",'comments':"ok"}),
+        headers:{
+          'Content-Type': 'application/json'
+        }
+      }).then(res => res.json())
+      .catch(error => console.error('Error:', error))
+    //  .then(response => console.log('Success:', response));
+
+
+
+
+    )}
+});
+
+ })
+ ();

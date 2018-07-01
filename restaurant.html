@@ -121,18 +121,35 @@
   <!-- End scripts -->
 <script>
 
-/*
+
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('serviceworker.js')
     .then(function(registration) {
-      console.log('Service Worker registration successful with scope: ',
+      console.log('Service Worker registration is successful with scope: ',
       registration.scope);
     })
+/*    .then(registration)=> {
+      console.log(registration)
+    }
+/*    .then(
+      registration.sync.register('post-review').then(() =>{
+        console.log("sync registered")
+      })
+    )*/
     .catch(function(err) {
       console.log('Service Worker registration failed: ', err);
     });
+
+    navigator.serviceWorker.ready.then(function(swRegistration) {
+      console.log(swRegistration)
+      return swRegistration.sync.register('post-review');
+    });
 }
-*/
+else {
+  console.log("fallback")
+}
+
+
 
 </script>
 
