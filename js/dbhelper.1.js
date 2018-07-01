@@ -29,11 +29,23 @@ function(){
 
      if (!upgradeDb.objectStoreNames.contains('restaurants')) {
        upgradeDb.createObjectStore('restaurants', {keyPath: 'id'});
-       addRestaurants()
+       addRestaurants();
+
+
+       upgradeDb.createObjectStore('reviews', {keyPath: 'id'})
+       addReviews()
 
      }
+
+
+
+
+
+
    }
  });
+
+
 
 
    function getRestaurants() {
@@ -46,10 +58,18 @@ function(){
 
    }
 
+    function getReviews() {
+     return dbPromise.then(function(db) {
+      var tx = db.transaction('reviews', 'readonly');
+      var store = tx.objectStore('reviews');
+      return store.getAll();
+    });
 
 
-   function addRestaurants(){
-           const api_url = 'http://localhost:1337/restaurants';
+   }
+
+   function addReviews(){
+        const api_url = 'https://projects-2018-tanyagupta.c9users.io:8080/reviews';
            fetch(api_url)
              .then (response => {
 
@@ -57,7 +77,67 @@ function(){
                                  })  // .then(function(response){return response.json}
              .then(items => {
 
-                             let data_mod = []
+                             let data_mod = [];
+                            //console.log(items)
+                             for (let i in items)
+                             {
+
+                               let one_data={};
+                               one_data["id"]=items[i]["id"];
+                                one_data["restaurant_id"]=items[i]["restaurant_id"];
+                               one_data["name"]=items[i]["name"];
+                               one_data["createdAt"]=items[i]["createdAt"];
+                               one_data["updatedAt"]=items[i]["updatedAt"];
+                               one_data["rating"]=items[i]["rating"];
+                               one_data["comments"]=items[i]["comments"];
+
+                               data_mod.push(one_data)
+
+
+                             }
+                           var items=data_mod;
+                          // console.log(items)
+
+
+
+
+             dbPromise.then(function(db)
+             {
+
+                   var tx = db.transaction('reviews', 'readwrite');
+                   var store = tx.objectStore('reviews');
+
+
+                 return Promise.all(items.map(function(item) {
+
+                     return store.add(item);
+                   })
+                 ).catch(function(e) {
+                   tx.abort();
+                   console.log(e);
+                 }).then(function() {
+                   console.log('All reviews added successfully!');
+                 });
+
+
+           });
+
+         });
+
+
+   }
+
+   function addRestaurants(){
+           const api_url = 'https://projects-2018-tanyagupta.c9users.io:8080/restaurants';
+           fetch(api_url)
+             .then (response => {
+
+                                   return response.json()
+                                 })  // .then(function(response){return response.json}
+             .then(items => {
+
+                             let data_mod = [];
+                             //console.log(items)
                              for (let i in items)
                              {
 
@@ -76,7 +156,7 @@ function(){
 
                              }
                            var items=data_mod;
-                           console.log(items)
+                           //console.log(items)
 
 
 
@@ -110,6 +190,8 @@ function(){
      dbPromise: (dbPromise),
       fetchRestaurants: (getRestaurants),
       addRestaurants: (addRestaurants),
+      addReviews: (addReviews),
+      getReviews: (getReviews)
      }
 
 
@@ -120,7 +202,7 @@ function(){
 
 
 
-idb.addRestaurants()
+//idb.addRestaurants()
 
 
 
@@ -150,7 +232,7 @@ class DBHelper {
 
 
   }*/
-  static get DATABASE_URL() {
+ // static get DATABASE_URL() {
     //const port = 8000 // Change this to your server port
     //return  "https://projects-2018-tanyagupta.c9users.io/MWS/mws-restaurant-stage-1/data/restaurants.json"
     //http://projects-2018-tanyagupta.c9users.io:8080/restaurants
@@ -175,8 +257,8 @@ class DBHelper {
     //return 'https://127.0.0.1:8082/data/restaurants.json'
     //return `http://localhost:${port}/data/restaurants.json`;
     //return "https://projects-2018-tanyagupta.c9users.io:8082/data/restaurants.json"  /* server location */
-    return 'http://localhost:1337/restaurants'
-  }
+   // return 'http://localhost:1337/restaurants'
+ // }
 
   /**
    * Fetch all restaurants.
@@ -227,6 +309,30 @@ class DBHelper {
         }
       }
     });
+  }
+
+  static getReviewsById(id,callback){
+        // fetch all restaurants by id with proper error handling.
+
+     idb.getReviews().then(function(restaurants,error){
+
+      if (error) {
+        callback(error, null);
+      } else {
+          const restaurant = restaurants.filter(r => r.restaurant_id == id);
+
+        if (restaurant) { // Got the restaurant
+          //console.log(restaurant)
+          callback(null, restaurant);
+        } else { // Restaurant does not exist in the database
+          callback('Restaurant does not exist', null);
+        }
+      }
+    });
+
+
+
+
   }
 
   /**
@@ -308,7 +414,7 @@ class DBHelper {
         //["Manhattan", "Brooklyn", "Manhattan", "Manhattan", "Brooklyn", "Brooklyn", "Manhattan", "Manhattan", "Queens", "Queens"]
         // Remove duplicates from neighborhoods
         const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i)
-        console.log(uniqueNeighborhoods)
+        //console.log(uniqueNeighborhoods)
         //["Manhattan", "Brooklyn", "Queens"]
         callback(null, uniqueNeighborhoods);
       }
@@ -337,6 +443,7 @@ class DBHelper {
       }
     });
   }
+
 
   /**
    * Restaurant page URL.

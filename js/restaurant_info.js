@@ -14,7 +14,7 @@ window.initMap = () => {
     if (error) { // Got an error!
       console.error(error);
     } else {
-      console.log(restaurant)
+      //console.log(restaurant)
       self.map = new google.maps.Map(document.getElementById('map'), {
         zoom: 16,
         center: restaurant.latlng,
@@ -46,6 +46,7 @@ fetchRestaurantFromURL = (callback) => {
   } else {
        DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
+
       if (!restaurant) {
         console.log(error);
         return;
@@ -71,7 +72,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   image.className = 'restaurant-img';
   image.alt = "restaurant "+restaurant.name;
   const img_name = restaurant.photograph;
-  console.log(img_name);
+  //console.log(img_name);
   const img_num=img_name.split('.')[0].toString()
    image.srcset  =
   "destmin/img/"+img_num+"-256.jpg 256w, "
@@ -117,11 +118,16 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  * Create all reviews HTML and add them to the webpage.
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
 
+ //DBHelper.getReviewsById(self.restaurant.id)
+ const id = self.restaurant.id
+  DBHelper.getReviewsById(id, (error, reviews) => {
+   // console.log(reviews)
   if (!reviews) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
@@ -129,16 +135,25 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     return;
   }
   const ul = document.getElementById('reviews-list');
+  console.log(reviews)
   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
   container.appendChild(ul);
+
+  })
 }
 
 /**
  * Create review HTML and add it to the webpage.
  */
 createReviewHTML = (review) => {
+
+  const months = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+
   const li = document.createElement('li');
   li.classList.add("full_review")
   const holder = document.createElement('p')
@@ -152,8 +167,14 @@ createReviewHTML = (review) => {
 
   const date = document.createElement('p');
   date.classList.add("review_date")
+  console.log(review.updatedAt)
+  const dateObj = new Date(review.updatedAt);
+  const month = months[dateObj.getUTCMonth()];
+  const day = dateObj.getUTCDate()
+  const year = dateObj.getFullYear()
 
-  date.innerHTML = review.date;
+  date.innerHTML = day+" "+month+", "+year
+
   holder.appendChild(date);
 
   li.appendChild(holder);
@@ -200,3 +221,28 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+
+var btn = document.getElementById("sub_review");
+btn.onclick =
+  function(){
+    const url = 'https://projects-2018-tanyagupta.c9users.io:8080/reviews'
+    const name = document.getElementById("name").value;
+    const restaurant_id = document.getElementById("id").value;
+    const rating = document.getElementById("rating").value;
+    const comments = document.getElementById("comments").value;
+
+    const data={name:name,restaurant_id:restaurant_id,rating:rating,comments:comments}
+
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers:{
+        'Content-Type': 'application/json'
+      }
+    }).then(res => res.json())
+    .catch(error => console.error('Error:', error))
+    .then(response => console.log('Success:', response));
+
+
+ }

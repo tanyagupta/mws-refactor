@@ -105,7 +105,7 @@ updateRestaurants = () => {
 
   const cuisine = cSelect[cIndex].value;
   const neighborhood = nSelect[nIndex].value;
-  
+
   DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
 
 
@@ -192,7 +192,7 @@ createRestaurantHTML = (restaurant) => {
 
   //image.srcset = "dest/320/1.jpg 100w, dest/640/1.jpg 200w"
   picture.append(image)
-  console.log(picture)
+  //console.log(picture)
 
   li.append(picture);
 
