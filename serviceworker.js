@@ -19,7 +19,9 @@
      'js/dbhelper.1.js',
      'js/main.1.js',
      'js/libs.js',
-     'js/restaurant_info.js'
+     'js/restaurant_info.js',
+     'pages/404.html',
+     'pages/offline.html'
    ];
 
    var staticCacheName = 'pages-cache-v4';
@@ -34,6 +36,12 @@
      );
    });
 
+   self.addEventListener('sync', function(event) {
+    if (event.tag == 'review-post') {
+      event.waitUntil(post_review())
+    }
+  })
+
    self.addEventListener('fetch', function(event) {
      //console.log('Fetch event for ', event.request.url);
      event.respondWith(
@@ -46,9 +54,9 @@
          //console.log('Network request for ', event.request.url);
          return fetch(event.request).then(function(response) {
            //console.log("404 expected",response.status)
-           if (response.status === 404) {
-             return caches.match('static/pages/404.html');
-           }
+//           if (response.status === 404) {
+//             return caches.match('pages/404.html');
+//           }
            return caches.open(staticCacheName).then(function(cache) {
 
             // if (event.request.url.indexOf('test') < 0) {
@@ -59,7 +67,7 @@
          });
        }).catch(function(error) {
          console.log('Error, ', error);
-         return caches.match('static/pages/offline.html');
+         return caches.match('pages/offline.html');
        })
      );
    });
@@ -83,25 +91,39 @@
    );
  });
 
- self.addEventListener('sync', function(event) {
-  if (event.tag == 'post-review') {
-    event.waitUntil(
-      
-      fetch('http://localhost:1337/reviews', {
-        method: 'POST',
-        body: JSON.stringify({'name':"foo",'restaurant_id':"1",'rating':"4",'comments':"ok"}),
-        headers:{
-          'Content-Type': 'application/json'
-        }
-      }).then(res => res.json())
-      .catch(error => console.error('Error:', error))
     //  .then(response => console.log('Success:', response));
 
 
 
 
-    )}
-});
+//  )}
+//});
 
- })
+})
  ();
+
+
+ function post_review(){
+   //const url = 'https://projects-2018-tanyagupta.c9users.io:8080/reviews'
+   console.log("here")
+
+   //var data = {name: sessionStorage.getItem("name"),restaurant_id: sessionStorage.getItem("restaurant_id"),rating: sessionStorage.getItem("rating"),comments: sessionStorage.getItem("comments")};
+   const url = 'http://localhost:1337/reviews'
+   const name = document.getElementById("name").value;
+   const restaurant_id = document.getElementById("id").value;
+   const rating = document.getElementById("rating").value;
+   const comments = document.getElementById("comments").value;
+   const data = {'name':name,'restaurant_id':restaurant_id,'rating':rating,'comments':comments}
+   console.log(data)
+   fetch(url, {
+     method: 'POST',
+     body: JSON.stringify(data),
+     headers:{
+       'Content-Type': 'application/json'
+     }
+   }).then(res => res.json())
+   .catch(error => console.error('Error:', error))
+   .then(response => console.log('Success:', response));
+
+
+}

@@ -139,13 +139,14 @@ function(){
              .then(items => {
 
                              let data_mod = [];
-                             //console.log(items)
+                             console.log(items)
                              for (let i in items)
                              {
 
                                let one_data={};
                                one_data["id"]=Number(i)+1
                                one_data["name"]=items[i]["name"]
+                               one_data["is_favorite"]=items[i]["is_favorite"]
                                one_data["neighborhood"]=items[i]["neighborhood"]
                                one_data["photograph"]=items[i]["photograph"]
                                one_data["address"]=items[i]["address"]
@@ -153,6 +154,7 @@ function(){
                                one_data["cuisine_type"]=items[i]["cuisine_type"]
                                one_data["operating_hours"]=items[i]["operating_hours"]
                                one_data["reviews"]=items[i]["reviews"]
+                               one_data["updatedAt"]=items[i]["updatedAt"]
 
                                data_mod.push(one_data)
 

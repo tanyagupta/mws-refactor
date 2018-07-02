@@ -54,6 +54,14 @@
 -->
 
 <div id="review_form">
+
+  <label class="switch">
+    <p id="starlabel">Favorite this restaurant</p>
+  <input id="star" type="checkbox">
+    <span class="slider round"></span>
+  </label>  <br>
+
+
     <input type="checkbox" id="cbox" hidden>
 
     <div id="hidden">
@@ -82,8 +90,10 @@
         </div>
         </fieldset>
       </form>
+
   </div>
 <label class="review_label" for="cbox">Submit Review (hide)</label>
+<div id="connectionStatus"></div>
 </div>
 
     <section id="reviews-container">
@@ -122,32 +132,104 @@
 <script>
 
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('serviceworker.js')
-    .then(function(registration) {
-      console.log('Service Worker registration is successful with scope: ',
-      registration.scope);
-    })
-/*    .then(registration)=> {
-      console.log(registration)
-    }
-/*    .then(
-      registration.sync.register('post-review').then(() =>{
-        console.log("sync registered")
-      })
-    )*/
-    .catch(function(err) {
-      console.log('Service Worker registration failed: ', err);
-    });
 
-    navigator.serviceWorker.ready.then(function(swRegistration) {
-      console.log(swRegistration)
-      return swRegistration.sync.register('post-review');
-    });
-}
-else {
-  console.log("fallback")
-}
+
+var star = document.getElementById("star")
+star.addEventListener("click",function(event){
+  const ischecked = star.checked;
+  const curr_url = window.location.href
+  const restaurant_id=curr_url.substring(curr_url.indexOf("=")+1)
+
+    console.log(ischecked);
+    const url = 'http://localhost:1337/restaurants/'+restaurant_id+'/?is_favorite='+ischecked
+    fetch(url, {
+      method: 'PUT',
+      headers:{
+        'Content-Type': 'application/json'
+      }
+    }).then(res => res.json())
+    .catch(error => console.error('Error:', error))
+    .then(response => console.log('Success:', response));
+  })
+
+
+
+
+function isOnline() {
+    var connectionStatus = document.getElementById('connectionStatus');
+
+    if (navigator.onLine){
+      connectionStatus.innerHTML = 'You are currently online!';
+      var data = {name: sessionStorage.getItem("name"),restaurant_id: sessionStorage.getItem("restaurant_id"),rating: sessionStorage.getItem("rating"),comments: sessionStorage.getItem("comments")};
+      const url = 'http://localhost:1337/reviews'
+      //post_review(url,data)
+    }
+
+    else{
+
+      const url = 'http://localhost:1337/reviews'
+      const name = document.getElementById("name").value;
+      const restaurant_id = document.getElementById("id").value;
+      const rating = document.getElementById("rating").value;
+      const comments = document.getElementById("comments").value;
+
+      const data={name:name,restaurant_id:restaurant_id,rating:rating,comments:comments}
+      sessionStorage.clear();
+      sessionStorage.setItem("name",name);
+      sessionStorage.setItem("restaurant_id",restaurant_id);
+      sessionStorage.setItem("rating",rating);
+      sessionStorage.setItem("comments",comments);
+
+        connectionStatus.innerHTML = 'You are currently offline. Any requests made will be queued and synced as soon as you are connected again. Your data: '+JSON.stringify(data);
+      //console.log(data)
+      //sessionStorage.clear();
+    }
+  }
+window.addEventListener('online', isOnline);
+window.addEventListener('offline', isOnline);
+isOnline();
+
+if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('serviceworker.js').then((registration) => {
+          return navigator.serviceWorker.ready;
+        }).then((registration) => {
+          // register sync
+          document.getElementById('sub_review').addEventListener('click', () => {
+            registration.sync.register('review-post').then(() => {
+              console.log('sync registered');
+            }).catch(function(error){
+              console.log('Unable to post review.');
+            });
+          });
+        }).catch(function(error){
+          console.log('Unable to register Service Worker.');
+        });
+    }
+    else{
+      console.log('Service Worker functionality not supported.');
+    }
+
+
+var sub_review = document.getElementById("sub_review")
+sub_review.addEventListener("click",function(event){
+  const url = 'http://localhost:1337/reviews'
+  const name = document.getElementById("name").value;
+  const restaurant_id = document.getElementById("id").value;
+  const rating = document.getElementById("rating").value;
+  const comments = document.getElementById("comments").value;
+  const data = {'name':name,'restaurant_id':restaurant_id,'rating':rating,'comments':comments}
+  fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers:{
+      'Content-Type': 'application/json'
+    }
+  }).then(res => res.json())
+  .catch(error => console.error('Error:', error))
+  .then(response => console.log('Success:', response));
+
+})
+
 
 
 
@@ -804,6 +886,66 @@ p.review_text {
     margin-left: auto;
     margin-right: auto;
   }
+}
+
+/* toggle */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 17px;
+
+}
+#starlabel{
+  width: 240px;
+}
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 13px;
+  width: 13px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(13px);
+  -ms-transform: translateX(13px);
+  transform: translateX(13px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 8px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
 </style>
 </body>
