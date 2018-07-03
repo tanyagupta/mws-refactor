@@ -101,29 +101,3 @@
 
 })
  ();
-
-
- function post_review(){
-   //const url = 'https://projects-2018-tanyagupta.c9users.io:8080/reviews'
-   console.log("here")
-
-   //var data = {name: sessionStorage.getItem("name"),restaurant_id: sessionStorage.getItem("restaurant_id"),rating: sessionStorage.getItem("rating"),comments: sessionStorage.getItem("comments")};
-   const url = 'http://localhost:1337/reviews'
-   const name = document.getElementById("name").value;
-   const restaurant_id = document.getElementById("id").value;
-   const rating = document.getElementById("rating").value;
-   const comments = document.getElementById("comments").value;
-   const data = {'name':name,'restaurant_id':restaurant_id,'rating':rating,'comments':comments}
-   console.log(data)
-   fetch(url, {
-     method: 'POST',
-     body: JSON.stringify(data),
-     headers:{
-       'Content-Type': 'application/json'
-     }
-   }).then(res => res.json())
-   .catch(error => console.error('Error:', error))
-   .then(response => console.log('Success:', response));
-
-
-}
