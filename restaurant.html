@@ -62,7 +62,7 @@
     <input type="checkbox" id="cbox" hidden>
 
     <div id="hidden">
-          <form>
+          <form class="review-form">
           <fieldset>
 
         <legend><h3>Submit your review</h3></legend>
@@ -122,7 +122,8 @@
    <script type="application/javascript" charset="utf-8" src="js/libs.js"></script>
   <script type="application/javascript" charset="utf-8" src="js/dbhelper.1.js"></script>
   <!-- Main javascript file -->
-  <script type="text/javascript" src="js/restaurant_info.js"></script>
+ <script type="text/javascript" src="js/restaurant_info.js"></script>
+
   <!-- Google Maps -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxakT5jRg-pedFlANk0p-vzaeZ1FMafB8&libraries=places&callback=initMap"></script>
   <!-- End scripts -->
@@ -159,9 +160,18 @@ star.addEventListener("click",function(event){
 
 function isOnline() {
     var connectionStatus = document.getElementById('connectionStatus');
+    const url = 'http://localhost:1337/reviews'
+    const name = document.getElementById("name").value;
+    const restaurant_id = document.getElementById("id").value;
+    const rating = document.getElementById("rating").value;
+    const comments = document.getElementById("comments").value;
 
+    const data={name:name,restaurant_id:restaurant_id,rating:rating,comments:comments}
+
+    idb.addReviewsByRestId(restaurant_id);
     if (navigator.onLine){
-      connectionStatus.innerHTML = 'You are currently online!';
+      connectionStatus.innerHTML = 'You are currently online!'
+      //Your data: '+JSON.stringify(data);;
     //  var data = {name: sessionStorage.getItem("name"),restaurant_id: sessionStorage.getItem("restaurant_id"),rating: sessionStorage.getItem("rating"),comments: sessionStorage.getItem("comments")};
     //  const url = 'http://localhost:1337/reviews'
       //post_review(url,data)
@@ -169,13 +179,7 @@ function isOnline() {
 
     else{
 
-      const url = 'http://localhost:1337/reviews'
-      const name = document.getElementById("name").value;
-      const restaurant_id = document.getElementById("id").value;
-      const rating = document.getElementById("rating").value;
-      const comments = document.getElementById("comments").value;
 
-      const data={name:name,restaurant_id:restaurant_id,rating:rating,comments:comments}
 
 /*
       sessionStorage.clear();
@@ -193,14 +197,36 @@ window.addEventListener('online', isOnline);
 window.addEventListener('offline', isOnline);
 isOnline();
 
+
 if ('serviceWorker' in navigator) {
+
           navigator.serviceWorker.register('serviceworker.js').then((registration) => {
           return navigator.serviceWorker.ready;
         }).then((registration) => {
           // register sync
+          console.log('sync' in registration)
           document.getElementById('sub_review').addEventListener('click', () => {
             registration.sync.register('review-post').then(() => {
               console.log('sync registered');
+/*
+              const form = document.querySelector('review-form');
+              const name = document.querySelector("#name");
+              const restaurant_id = document.querySelector("#id")
+              const rating = document.querySelector("#rating")
+              const comments = document.querySelector("comment")
+
+              form.addEventListener('submit'),function(event){
+                event.preventDefault();
+                const review = {name:name.value,restaurant_id:restaurant_id.value,rating:rating.value, comments:comments.value}
+              }
+*/              
+              console.log(review)
+
+
+
+
+
+
             }).catch(function(error){
               console.log('Unable to post review.');
             });
@@ -214,6 +240,7 @@ if ('serviceWorker' in navigator) {
     }
 
 
+/*
 var sub_review = document.getElementById("sub_review")
 sub_review.addEventListener("click",function(event){
   const url = 'http://localhost:1337/reviews'
@@ -223,7 +250,7 @@ sub_review.addEventListener("click",function(event){
   const comments = document.getElementById("comments").value;
   const data = {'name':name,'restaurant_id':restaurant_id,'rating':rating,'comments':comments}
   console.log(data)
-  //createReviewHTML(data)
+
   fetch(url, {
     method: 'POST',
     body: JSON.stringify(data),
@@ -236,31 +263,7 @@ sub_review.addEventListener("click",function(event){
 
 })
 
-function post_review(){
-  //const url = 'https://projects-2018-tanyagupta.c9users.io:8080/reviews'
-  console.log("here")
-
-  //var data = {name: sessionStorage.getItem("name"),restaurant_id: sessionStorage.getItem("restaurant_id"),rating: sessionStorage.getItem("rating"),comments: sessionStorage.getItem("comments")};
-  const url = 'http://localhost:1337/reviews'
-  const name = document.getElementById("name").value;
-  const restaurant_id = document.getElementById("id").value;
-  const rating = document.getElementById("rating").value;
-  const comments = document.getElementById("comments").value;
-  const data = {'name':name,'restaurant_id':restaurant_id,'rating':rating,'comments':comments}
-
-  fetch(url, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers:{
-      'Content-Type': 'application/json'
-    }
-  }).then(res => res.json())
-  .catch(error => console.error('Error:', error))
-  .then(response => console.log('Success:', response));
-
-
-}
-
+*/
 </script>
 
 <style>

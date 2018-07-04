@@ -23,6 +23,7 @@ window.initMap = () => {
 
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+      idb.addReviewsByRestId(restaurant.id)
     }
   });
 }
@@ -62,6 +63,7 @@ fetchRestaurantFromURL = (callback) => {
  * Create restaurant HTML and add it to the webpage
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
+
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
@@ -73,7 +75,8 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   image.alt = "restaurant "+restaurant.name;
   const img_name = restaurant.photograph;
   //console.log(img_name);
-  const img_num=img_name.split('.')[0].toString()
+  const img_num= (img_name && img_name.split('.') && img_name.split('.')[0].toString()) || restaurant.id
+
    image.srcset  =
   "destmin/img/"+img_num+"-256.jpg 256w, "
   "destmin/img/"+img_num+"-320.jpg 320w, "+
@@ -153,7 +156,7 @@ createReviewHTML = (review) => {
   "July", "August", "September", "October", "November", "December"
 ];
 
-
+  document.getElementById("id").value=review.restaurant_id;
   const li = document.createElement('li');
   li.classList.add("full_review")
   const holder = document.createElement('p')

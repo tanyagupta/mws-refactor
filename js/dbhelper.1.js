@@ -57,6 +57,35 @@ function(){
 
 
    }
+ function addReviewsByRestId(restaurant_id){
+   const api_url = 'http://localhost:1337/reviews/?restaurant_id='+restaurant_id;
+   fetch(api_url)
+     .then (response => {
+
+                           return response.json()
+                         })  // .then(function(response){return response.json}
+     .then(items => {
+                    console.log(items)
+     dbPromise.then(function(db)
+     {
+       var tx = db.transaction('reviews', 'readwrite');
+       var store = tx.objectStore('reviews');
+       return Promise.all(items.map(function(item) {
+         return store.add(item);
+       })
+     ).catch(function(e) {
+       tx.abort();
+       console.log(e);
+     }).then(function() {
+       console.log('All reviews for restarant '+restaurant_id+' added successfully!');
+     });
+
+
+   });
+
+ });
+ }
+
 
     function getReviews() {
      return dbPromise.then(function(db) {
@@ -77,31 +106,6 @@ function(){
                                    return response.json()
                                  })  // .then(function(response){return response.json}
              .then(items => {
-
-                             let data_mod = [];
-                            //console.log(items)
-                             for (let i in items)
-                             {
-
-                               let one_data={};
-                               one_data["id"]=items[i]["id"];
-                                one_data["restaurant_id"]=items[i]["restaurant_id"];
-                               one_data["name"]=items[i]["name"];
-                               one_data["createdAt"]=items[i]["createdAt"];
-                               one_data["updatedAt"]=items[i]["updatedAt"];
-                               one_data["rating"]=items[i]["rating"];
-                               one_data["comments"]=items[i]["comments"];
-
-                               data_mod.push(one_data)
-
-
-                             }
-                           var items=data_mod;
-                          // console.log(items)
-
-
-
-
              dbPromise.then(function(db)
              {
 
@@ -127,6 +131,9 @@ function(){
 
 
    }
+   function test(){
+     console.log("test")
+   }
 
    function addRestaurants(){
             const api_url = "http://localhost:1337/restaurants/"
@@ -137,34 +144,6 @@ function(){
                                    return response.json()
                                  })  // .then(function(response){return response.json}
              .then(items => {
-
-                             let data_mod = [];
-                             console.log(items)
-                             for (let i in items)
-                             {
-
-                               let one_data={};
-                               one_data["id"]=Number(i)+1
-                               one_data["name"]=items[i]["name"]
-                               one_data["is_favorite"]=items[i]["is_favorite"]
-                               one_data["neighborhood"]=items[i]["neighborhood"]
-                               one_data["photograph"]=items[i]["photograph"]
-                               one_data["address"]=items[i]["address"]
-                               one_data["latlng"]=items[i]["latlng"]
-                               one_data["cuisine_type"]=items[i]["cuisine_type"]
-                               one_data["operating_hours"]=items[i]["operating_hours"]
-                               one_data["reviews"]=items[i]["reviews"]
-                               one_data["updatedAt"]=items[i]["updatedAt"]
-
-                               data_mod.push(one_data)
-
-                             }
-                           var items=data_mod;
-                           //console.log(items)
-
-
-
-
              dbPromise.then(function(db)
              {
 
@@ -195,7 +174,10 @@ function(){
       fetchRestaurants: (getRestaurants),
       addRestaurants: (addRestaurants),
       addReviews: (addReviews),
-      getReviews: (getReviews)
+      getReviews: (getReviews),
+//      fetchReviewsByRestId: (getReviewsByRestId),
+      addReviewsByRestId: (addReviewsByRestId),
+      test:(test)
      }
 
 
@@ -204,10 +186,10 @@ function(){
 
 
 
-
+//idb.addReviewsByRestId(3)
 
 //idb.addRestaurants()
-
+//idb.addReviews();
 
 
 
