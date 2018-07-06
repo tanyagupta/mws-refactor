@@ -22,7 +22,7 @@ function(){
      return;
    }
 
-   var dbPromise = idb.open('restaurants', 1, function(upgradeDb) {
+   var dbPromise = idb.open('restaurants', 2, function(upgradeDb) {
 
      switch (upgradeDb.oldVersion) {
      case 0:
@@ -35,6 +35,8 @@ function(){
        upgradeDb.createObjectStore('reviews', {keyPath: 'id'})
        addReviews()
 
+       upgradeDb.createObjectStore('user_review', {keyPath: 'name'})
+
      }
 
 
@@ -45,7 +47,17 @@ function(){
    }
  });
 
-
+  function addUserReview(review){
+    return dbPromise.then(function(db)
+    {
+      var tx = db.transaction('user_review', 'readwrite');
+      var store = tx.objectStore('user_review');
+      store.add(review);
+  }).catch(function(e) {
+    tx.abort();
+    console.log(e);
+  }).then(function(e){console.log("single review added")})
+  }
 
 
    function getRestaurants() {
@@ -132,7 +144,7 @@ function(){
 
    }
    function test(){
-     console.log("test")
+     return "test"
    }
 
    function addRestaurants(){
@@ -177,6 +189,7 @@ function(){
       getReviews: (getReviews),
 //      fetchReviewsByRestId: (getReviewsByRestId),
       addReviewsByRestId: (addReviewsByRestId),
+      addUserReview: (addUserReview),
       test:(test)
      }
 
@@ -249,6 +262,9 @@ class DBHelper {
   /**
    * Fetch all restaurants.
    */
+
+
+
   static fetchRestaurants(callback) {
     idb.fetchRestaurants().then(function(restaurants){
 

@@ -38,7 +38,12 @@
 
    self.addEventListener('sync', function(event) {
     if (event.tag == 'review-post') {
-      event.waitUntil(post_review(event))
+      event.waitUntil(
+        postReview(event)
+        //console.log(event);
+        //idb.test();
+      //  post_review(event)
+      )
     }
   })
 
@@ -102,32 +107,31 @@
 })
  ();
 
- function post_review(event){
-   //const url = 'https://projects-2018-tanyagupta.c9users.io:8080/reviews'
-/*   event.target.indexedDB.open("restaurants").onsuccess = function(event) {
-  db = event.target.result;
-  console.log(db)}
-*/
-const url = 'http://localhost:1337/reviews'
-   //var data = {name: sessionStorage.getItem("name"),restaurant_id: sessionStorage.getItem("restaurant_id"),rating: sessionStorage.getItem("rating"),comments: sessionStorage.getItem("comments")};
+function postReview(event){
+  event.target.indexedDB.open("restaurants").onsuccess = function(event) {
+    db = event.target.result;
+    var transaction = db.transaction("user_review",'readonly');
+    var objectStore = transaction.objectStore("user_review");
+    objectStore.getAll().onsuccess = function(reviewObject){
+      const data = reviewObject.target.result[0]
+      const url = 'http://localhost:1337/reviews'
+      const name = data.name;
+      const restaurant_id = data.restaurant_id;
+      const rating = data.rating;
+      const comments = data.comments
+      const result = {'name':name,'restaurant_id':restaurant_id,'rating':rating,'comments':comments}
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers:{
+          'Content-Type': 'application/json'
+        }
+      }).then(res => res.json())
+      .catch(error => console.error('Error:', error))
+      .then(response => console.log('Success:', response));
 
-/*
-   const name = document.getElementById("name").value;
-   const restaurant_id = document.getElementById("id").value;
-   const rating = document.getElementById("rating").value;
-   const comments = document.getElementById("comments").value;
-*/
-  // const data = {'name':name,'restaurant_id':restaurant_id,'rating':rating,'comments':comments}
-const data ={'name':"name",'restaurant_id':"3",'rating':"rating",'comments':"comments"}
-   fetch(url, {
-     method: 'POST',
-     body: JSON.stringify(data),
-     headers:{
-       'Content-Type': 'application/json'
-     }
-   }).then(res => res.json())
-   .catch(error => console.error('Error:', error))
-   .then(response => console.log('Success:', response));
-
-
- }
+    }
+    //var objectStore = transaction.objectStore("restaurants")
+    //objectStore.getAll().onsuccess = function(event){console.log(event.target.result)}
+  }
+}

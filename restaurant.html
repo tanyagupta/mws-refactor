@@ -62,7 +62,7 @@
     <input type="checkbox" id="cbox" hidden>
 
     <div id="hidden">
-          <form class="review-form">
+          <form id="review-form">
           <fieldset>
 
         <legend><h3>Submit your review</h3></legend>
@@ -168,7 +168,7 @@ function isOnline() {
 
     const data={name:name,restaurant_id:restaurant_id,rating:rating,comments:comments}
 
-    idb.addReviewsByRestId(restaurant_id);
+  //  idb.addReviewsByRestId(restaurant_id);
     if (navigator.onLine){
       connectionStatus.innerHTML = 'You are currently online!'
       //Your data: '+JSON.stringify(data);;
@@ -205,65 +205,29 @@ if ('serviceWorker' in navigator) {
         }).then((registration) => {
           // register sync
           console.log('sync' in registration)
-          document.getElementById('sub_review').addEventListener('click', () => {
-            registration.sync.register('review-post').then(() => {
-              console.log('sync registered');
-/*
-              const form = document.querySelector('review-form');
-              const name = document.querySelector("#name");
-              const restaurant_id = document.querySelector("#id")
-              const rating = document.querySelector("#rating")
-              const comments = document.querySelector("comment")
+          document.getElementById('review-form').addEventListener('submit', function(event) {
+            console.log(event)
+            event.preventDefault();
+            const name = document.getElementById("name");
+            const restaurant_id = document.getElementById("id")
+            const rating = document.getElementById("rating")
+            const comments = document.getElementById("comments")
+            const review = {'name':name.value,'restaurant_id':restaurant_id.value,'rating':rating.value, 'comments':comments.value}
 
-              form.addEventListener('submit'),function(event){
-                event.preventDefault();
-                const review = {name:name.value,restaurant_id:restaurant_id.value,rating:rating.value, comments:comments.value}
-              }
-*/              
-              console.log(review)
+            idb.addUserReview(review);
+            
+            return registration.sync.register('review-post');
 
-
-
-
-
-
-            }).catch(function(error){
-              console.log('Unable to post review.');
-            });
-          });
-        }).catch(function(error){
+          })
+        })
+        .catch(function(error){
           console.log('Unable to register Service Worker.');
-        });
+        })
     }
     else{
       console.log('Service Worker functionality not supported.');
     }
 
-
-/*
-var sub_review = document.getElementById("sub_review")
-sub_review.addEventListener("click",function(event){
-  const url = 'http://localhost:1337/reviews'
-  const name = document.getElementById("name").value;
-  const restaurant_id = document.getElementById("id").value;
-  const rating = document.getElementById("rating").value;
-  const comments = document.getElementById("comments").value;
-  const data = {'name':name,'restaurant_id':restaurant_id,'rating':rating,'comments':comments}
-  console.log(data)
-
-  fetch(url, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers:{
-      'Content-Type': 'application/json'
-    }
-  }).then(res => res.json())
-  .catch(error => console.error('Error:', error))
-  .then(response => console.log('Success:', response));
-
-})
-
-*/
 </script>
 
 <style>
