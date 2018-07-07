@@ -2,11 +2,6 @@
  * Common database helper functions.
  */
 
-/* global fetch */
-
-/*const GLOBALS = {
-  all_data:[]
-}
 
 /* global fetch */
 
@@ -22,7 +17,7 @@ function(){
      return;
    }
 
-   var dbPromise = idb.open('restaurants', 2, function(upgradeDb) {
+   var dbPromise = idb.open('restaurants', 3, function(upgradeDb) {
 
      switch (upgradeDb.oldVersion) {
      case 0:
@@ -66,9 +61,17 @@ function(){
       var store = tx.objectStore('restaurants');
       return store.getAll();
     });
-
-
    }
+
+ function getRestaurantById(id){
+
+   return dbPromise.then(function(db) {
+     var tx = db.transaction('restaurants', 'readonly');
+     var store = tx.objectStore('restaurants');
+     return store.get(id);
+   });
+ }
+
  function addReviewsByRestId(restaurant_id){
    const api_url = 'http://localhost:1337/reviews/?restaurant_id='+restaurant_id;
    fetch(api_url)
@@ -143,8 +146,10 @@ function(){
 
 
    }
-   function test(){
-     return "test"
+   function test(id){
+
+     return id+" here";
+
    }
 
    function addRestaurants(){
@@ -187,6 +192,7 @@ function(){
       addRestaurants: (addRestaurants),
       addReviews: (addReviews),
       getReviews: (getReviews),
+      getRestaurantById: (getRestaurantById),
 //      fetchReviewsByRestId: (getReviewsByRestId),
       addReviewsByRestId: (addReviewsByRestId),
       addUserReview: (addUserReview),
@@ -208,89 +214,12 @@ function(){
 
 class DBHelper {
 
-  /**
-   * Database URL.
-   * Change this to restaurants.json file location on your server.
-   */
-
-/*  static data(){
-   const url = 'http://localhost:1337/restaurants'
-
-   fetch(url)
-    .then (response => {return response.json()})
-    .then(data => {
-      console.log(data)
-    return data
-
-      })
-    .catch (err => {
-      console.log("===we have an error===")
-      console.log(err.stack)
-    })
-
-
-
-  }*/
- // static get DATABASE_URL() {
-    //const port = 8000 // Change this to your server port
-    //return  "https://projects-2018-tanyagupta.c9users.io/MWS/mws-restaurant-stage-1/data/restaurants.json"
-    //http://projects-2018-tanyagupta.c9users.io:8080/restaurants
-    //const url = "http://localhost:8080/restaurants";
-
-   // const url="https://projects-2018-tanyagupta.c9users.io:8080/restaurants"
-    //return url;
-
-    /*
-    fetch(url)
-    .then (response => {return response.json()})
-    .then(data => {console.log(data);return data;})
-    .catch (err => {
-      console.log("===we have an error===")
-      console.log(err.stack)
-    })
-    */
-
-    //return "https://projects-2018-tanyagupta.c9users.io:8080/restaurants"
-
-
-    //return 'https://127.0.0.1:8082/data/restaurants.json'
-    //return `http://localhost:${port}/data/restaurants.json`;
-    //return "https://projects-2018-tanyagupta.c9users.io:8082/data/restaurants.json"  /* server location */
-   // return 'http://localhost:1337/restaurants'
- // }
-
-  /**
-   * Fetch all restaurants.
-   */
-
-
-
   static fetchRestaurants(callback) {
     idb.fetchRestaurants().then(function(restaurants){
 
       return restaurants;
     })
 
-    /*
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    console.log(DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-
-        const json = JSON.parse(xhr.responseText);
-        const restaurants = json.restaurants;
-        DBHelper.data.all_data=restaurants
-
-
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    };
-    xhr.send();
-    */
   }
 
   /**

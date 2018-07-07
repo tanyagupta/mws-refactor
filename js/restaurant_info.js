@@ -22,8 +22,10 @@ window.initMap = () => {
       });
 
       fillBreadcrumb();
+
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
       idb.addReviewsByRestId(restaurant.id)
+
     }
   });
 }
@@ -157,6 +159,21 @@ createReviewHTML = (review) => {
 ];
 
   document.getElementById("id").value=review.restaurant_id;
+
+/*
+  idb.getRestaurantById(review.restaurant_id).then(function(restaurant){
+    console.log(restaurant)
+    if (restaurant.is_favorite){
+
+      document.getElementById("star").checked=true;
+    }
+    else{
+
+      document.getElementById("star").checked=false;
+    }
+
+  })
+*/
   const li = document.createElement('li');
   li.classList.add("full_review")
   const holder = document.createElement('p')

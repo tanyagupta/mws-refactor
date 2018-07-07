@@ -130,11 +130,6 @@
 <script>
 
 
-//const curr_url = window.location.href
-//const restaurant_id=curr_url.substring(curr_url.indexOf("=")+1)
-//const restaurant_id= document.getElementById(id).value
-//document.getElementById("id").value = restaurant_id
-//document.getElementById('id').readOnly = true;
 
 var star = document.getElementById("star")
 star.addEventListener("click",function(event){
@@ -163,34 +158,23 @@ function isOnline() {
     const url = 'http://localhost:1337/reviews'
     const name = document.getElementById("name").value;
     const restaurant_id = document.getElementById("id").value;
+
     const rating = document.getElementById("rating").value;
     const comments = document.getElementById("comments").value;
 
     const data={name:name,restaurant_id:restaurant_id,rating:rating,comments:comments}
 
+
   //  idb.addReviewsByRestId(restaurant_id);
     if (navigator.onLine){
       connectionStatus.innerHTML = 'You are currently online!'
-      //Your data: '+JSON.stringify(data);;
-    //  var data = {name: sessionStorage.getItem("name"),restaurant_id: sessionStorage.getItem("restaurant_id"),rating: sessionStorage.getItem("rating"),comments: sessionStorage.getItem("comments")};
-    //  const url = 'http://localhost:1337/reviews'
-      //post_review(url,data)
+
     }
 
     else{
 
-
-
-/*
-      sessionStorage.clear();
-      sessionStorage.setItem("name",name);
-      sessionStorage.setItem("restaurant_id",restaurant_id);
-      sessionStorage.setItem("rating",rating);
-      sessionStorage.setItem("comments",comments);
-*/
         connectionStatus.innerHTML = 'You are currently offline. Any requests made will be queued and synced as soon as you are connected again.'
-      //console.log(data)
-      //sessionStorage.clear();
+
     }
   }
 window.addEventListener('online', isOnline);
@@ -238,38 +222,7 @@ if ('serviceWorker' in navigator) {
     }
 })
 
-/*
-if ('serviceWorker' in navigator) {
 
-          navigator.serviceWorker.register('serviceworker.js').then((registration) => {
-          return navigator.serviceWorker.ready;
-        }).then((registration) => {
-          // register sync
-          console.log('sync' in registration)
-          document.getElementById('review-form').addEventListener('submit', function(event) {
-            console.log(event)
-            event.preventDefault();
-            const name = document.getElementById("name");
-            const restaurant_id = document.getElementById("id")
-            const rating = document.getElementById("rating")
-            const comments = document.getElementById("comments")
-            const review = {'name':name.value,'restaurant_id':restaurant_id.value,'rating':rating.value, 'comments':comments.value}
-
-            idb.addUserReview(review);
-
-            return registration.sync.register('review-post');
-
-          })
-        })
-        .catch(function(error){
-          console.log('Unable to register Service Worker.');
-        })
-    }
-    else{
-      console.log('Service Worker functionality not supported.');
-    }
-
-*/
 </script>
 
 
