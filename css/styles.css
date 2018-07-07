@@ -1,6 +1,3 @@
-@charset "utf-8";
-/* CSS Document */
-
 body,
 td,
 th,
@@ -167,11 +164,11 @@ nav h1 a {
   display: flex;
   justify-content: center;
 }
-
+/*
 .center {
   width: 800px;
 }
-
+*/
 /* Display list items side by side */
 #breadcrumb li {
   display: inline;
@@ -521,7 +518,119 @@ li.full_review {
 p.review_text {
   text-align: left;
 }
+/*restaurant add */
 
+
+
+#review_form{
+  background-color: #f7f7f7;
+  margin: auto;
+    width: 50%;
+    padding: 10px;
+
+}
+
+form {
+    display: table;
+}
+
+div.form-content {
+    display: table-row;
+}
+
+label {
+    display: table-cell;
+    margin-bottom: 10px;
+}
+
+label {
+    padding-right: 10px;
+}
+
+.review_label{
+  color: #f58500;
+ font-weight: bold;
+}
+#hidden {
+  display: none;
+
+}
+:checked + #hidden {
+  display: block;
+}
+
+.res_img {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#_forms-container {
+  border-bottom: 1px solid #d9d9d9;
+  border-top: 1px solid #fff;
+  width: 100%;
+}
+
+/* toggle */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 17px;
+
+}
+#starlabel{
+  width: 240px;
+}
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 13px;
+  width: 13px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(13px);
+  -ms-transform: translateX(13px);
+  transform: translateX(13px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 8px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* restaurant end */
 @media screen and (max-width:375px) {
   #map-container,
   #restaurant-hours,

@@ -113,13 +113,17 @@ function postReview(event){
     var transaction = db.transaction("user_review",'readonly');
     var objectStore = transaction.objectStore("user_review");
     objectStore.getAll().onsuccess = function(reviewObject){
-      const data = reviewObject.target.result[0]
+      console.log(reviewObject.target)
+      const data = reviewObject.target.result[Number(reviewObject.target.result.length)-1]
+      console.log(data)
       const url = 'http://localhost:1337/reviews'
       const name = data.name;
       const restaurant_id = data.restaurant_id;
       const rating = data.rating;
       const comments = data.comments
       const result = {'name':name,'restaurant_id':restaurant_id,'rating':rating,'comments':comments}
+
+
       fetch(url, {
         method: 'POST',
         body: JSON.stringify(data),
