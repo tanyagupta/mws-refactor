@@ -27,10 +27,10 @@ function(){
        addRestaurants();
 
 
-      // upgradeDb.createObjectStore('reviews', {keyPath: 'id'})
+    //   upgradeDb.createObjectStore('reviews', {keyPath: 'id'})
       // addReviews()
 
-       //upgradeDb.createObjectStore('user_review', {keyPath: 'name'})
+       upgradeDb.createObjectStore('user_review', {keyPath: 'name'})
 
      }
 
@@ -100,6 +100,16 @@ function(){
 
  });
  }
+
+ function getUserReview() {
+  return dbPromise.then(function(db) {
+   var tx = db.transaction('user_review', 'readonly');
+   var store = tx.objectStore('user_review');
+   return store.getAll();
+ });
+
+
+}
 
 
     function getReviews() {
@@ -196,6 +206,7 @@ function(){
 //      fetchReviewsByRestId: (getReviewsByRestId),
       addReviewsByRestId: (addReviewsByRestId),
       addUserReview: (addUserReview),
+      getUserReview: (getUserReview),
       test:(test)
      }
 

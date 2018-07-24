@@ -216,7 +216,7 @@ createReviewHTML = (review) => {
   console.log(online);
 
   window.addEventListener("offline", function(){
-    alert("Network is offline");
+
     online = false;
   }, false);
 
@@ -245,15 +245,7 @@ createReviewHTML = (review) => {
       })
       location.reload();
     } else {
-      idb.open('rev', 1, function(upgradeDb) {
-        upgradeDb.createObjectStore('outbox', { autoIncrement : true, keyPath: 'id' });
-      }).then(function(db) {
-        var transaction = db.transaction('outbox', 'readwrite');
-        return transaction.objectStore('outbox').put(newReview);
-
-      }).then(function() {
-        alert('Your new review has been stored locally and will be sent to the server when network connection returns');
-      });
+      idb.addUserReview(review)
     }
 
   })
@@ -290,33 +282,17 @@ getParameterByName = (name, url) => {
 }
 
 
-var store = {
-  db: null,
 
-  init: function() {
-    if (store.db) { return Promise.resolve(store.db); }
-    return idb.open('rev', 1, function(upgradeDb) {
-      upgradeDb.createObjectStore('outbox', { autoIncrement : true, keyPath: 'id' });
-    }).then(function(db) {
-      return store.db = db;
-    });
-  },
-
-  outbox: function(mode) {
-    return store.init().then(function(db) {
-      return db.transaction('outbox', mode).objectStore('outbox');
-    })
-  }
-}
 
 
 window.addEventListener("online", function(){
-  alert("Network is online");
-  // get reviews from idb and send to network
-  store.outbox('readonly').then(function (outbox) {
-    return outbox.getAll();
-  }).then(function (reviews) {
-    return Promise.all(reviews.map(function (review) {
+
+  idb.getUserReview()
+  //.then(function(review){
+
+    //return review
+   .then(function (review) {
+    //return Promise.all(review.map(function (each) {
       return fetch('http://localhost:1337/reviews/', {
         method: 'POST',
         body: JSON.stringify(review),
@@ -324,18 +300,15 @@ window.addEventListener("online", function(){
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         }
-      }).then(function (response) {
-        return response.json();
+      }).then(function (review) {
+        return review.json();
       }).then(function (data) {
-        if (data.result === 'success') {
-          alert('offline data sent')
-          return store.outbox('readwrite').then(function (outbox) {
-            return outbox.delete(review.id);
-          });
-        }
       })
-    }).catch(function (err) { console.error(err); })
-    )
+    })
   })
+//    }).catch(function (err) { console.error(err); })
+//    )
+//  })
 
-}, false);
+
+//}, false);
