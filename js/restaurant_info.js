@@ -24,7 +24,7 @@ window.initMap = () => {
       fillBreadcrumb();
 
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-      idb.addReviewsByRestId(restaurant.id)
+      //idb.addReviewsByRestId(restaurant.id)
 
     }
   });
@@ -122,16 +122,24 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (reviews = self.restaurant) => {
 
-  const container = document.getElementById('reviews-container');
-  const title = document.createElement('h2');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
+ (fetchReviews = () => {
+     fetch(`http://localhost:1337/reviews/?restaurant_id=${self.restaurant.id}`)
+     .then(function (res) {
+
+     return res.json();
+   }).then(function (data) {
+     console.log(data)
+     const reviews = data;
+     const container = document.getElementById('reviews-container');
+     const title = document.createElement('h2');
+     title.innerHTML = 'Reviews';
+     container.appendChild(title);
 
  //DBHelper.getReviewsById(self.restaurant.id)
- const id = self.restaurant.id
-  DBHelper.getReviewsById(id, (error, reviews) => {
+// const id = self.restaurant.id
+  //DBHelper.getReviewsById(id, (error, reviews) => {
    // console.log(reviews)
   if (!reviews) {
     const noReviews = document.createElement('p');
@@ -146,7 +154,9 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   });
   container.appendChild(ul);
 
+
   })
+})()
 }
 
 /**
@@ -159,21 +169,6 @@ createReviewHTML = (review) => {
 ];
 
   document.getElementById("id").value=review.restaurant_id;
-
-/*
-  idb.getRestaurantById(review.restaurant_id).then(function(restaurant){
-    console.log(restaurant)
-    if (restaurant.is_favorite){
-
-      document.getElementById("star").checked=true;
-    }
-    else{
-
-      document.getElementById("star").checked=false;
-    }
-
-  })
-*/
   const li = document.createElement('li');
   li.classList.add("full_review")
   const holder = document.createElement('p')
@@ -212,6 +207,58 @@ createReviewHTML = (review) => {
   return li;
 }
 
+
+/**
+ * add new review
+ */
+  const reviewForm = document.getElementById('sub_review');
+  let online = window.navigator.onLine;
+  console.log(online);
+
+  window.addEventListener("offline", function(){
+    alert("Network is offline");
+    online = false;
+  }, false);
+
+  var form = document.getElementById('review-form');
+  form.addEventListener('submit', function(event) {
+  event.preventDefault();
+  console.log(event)
+  console.log('event triggered')
+  const name = document.getElementById("name");
+  const restaurant_id = document.getElementById("id")
+  const rating = document.getElementById("rating")
+  const comments = document.getElementById("comments")
+  const today = new Date()
+  const review = {'name':name.value,'restaurant_id':restaurant_id.value,'rating':rating.value, 'comments':comments.value,createdAt:today,updatedAt:today}
+
+
+    // If online send to api DB
+    if (online) {
+      fetch('http://localhost:1337/reviews/', {
+            method: 'POST',
+            body: JSON.stringify(review),
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+      })
+      location.reload();
+    } else {
+      idb.open('rev', 1, function(upgradeDb) {
+        upgradeDb.createObjectStore('outbox', { autoIncrement : true, keyPath: 'id' });
+      }).then(function(db) {
+        var transaction = db.transaction('outbox', 'readwrite');
+        return transaction.objectStore('outbox').put(newReview);
+
+      }).then(function() {
+        alert('Your new review has been stored locally and will be sent to the server when network connection returns');
+      });
+    }
+
+  })
+
+
 /**
  * Add restaurant name to the breadcrumb navigation menu
  */
@@ -241,3 +288,54 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+
+var store = {
+  db: null,
+
+  init: function() {
+    if (store.db) { return Promise.resolve(store.db); }
+    return idb.open('rev', 1, function(upgradeDb) {
+      upgradeDb.createObjectStore('outbox', { autoIncrement : true, keyPath: 'id' });
+    }).then(function(db) {
+      return store.db = db;
+    });
+  },
+
+  outbox: function(mode) {
+    return store.init().then(function(db) {
+      return db.transaction('outbox', mode).objectStore('outbox');
+    })
+  }
+}
+
+
+window.addEventListener("online", function(){
+  alert("Network is online");
+  // get reviews from idb and send to network
+  store.outbox('readonly').then(function (outbox) {
+    return outbox.getAll();
+  }).then(function (reviews) {
+    return Promise.all(reviews.map(function (review) {
+      return fetch('http://localhost:1337/reviews/', {
+        method: 'POST',
+        body: JSON.stringify(review),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        if (data.result === 'success') {
+          alert('offline data sent')
+          return store.outbox('readwrite').then(function (outbox) {
+            return outbox.delete(review.id);
+          });
+        }
+      })
+    }).catch(function (err) { console.error(err); })
+    )
+  })
+
+}, false);

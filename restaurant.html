@@ -187,33 +187,7 @@ if ('serviceWorker' in navigator) {
   console.log("service worker detected")
           navigator.serviceWorker.register('serviceworker.js').then((registration) => {
               console.log("registration started")
-
-          // register sync
-          if('sync' in registration){
-              console.log("sync detected")
-            var form = document.getElementById('review-form');
-            form.addEventListener('submit', function(event) {
-            console.log(event)
-            console.log('event triggered')
-            event.preventDefault();
-            const name = document.getElementById("name");
-            const restaurant_id = document.getElementById("id")
-            const rating = document.getElementById("rating")
-            const comments = document.getElementById("comments")
-            const today = new Date()
-            const review = {'name':name.value,'restaurant_id':restaurant_id.value,'rating':rating.value, 'comments':comments.value,createdAt:today,updatedAt:today}
-
-            idb.addUserReview(review);
-            console.log('user review added')
-            console.log(review)
-            const ul = document.getElementById('reviews-list');
-            ul.appendChild(createReviewHTML(review));
-            return registration.sync.register('review-post');
-
-          })
-        }
-        })
-        .catch(function(error){
+        }).catch(function(error){
           console.log('Unable to register Service Worker.');
         })
     }

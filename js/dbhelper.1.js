@@ -27,10 +27,10 @@ function(){
        addRestaurants();
 
 
-       upgradeDb.createObjectStore('reviews', {keyPath: 'id'})
-       addReviews()
+      // upgradeDb.createObjectStore('reviews', {keyPath: 'id'})
+      // addReviews()
 
-       upgradeDb.createObjectStore('user_review', {keyPath: 'name'})
+       //upgradeDb.createObjectStore('user_review', {keyPath: 'name'})
 
      }
 
