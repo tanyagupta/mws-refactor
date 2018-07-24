@@ -301,11 +301,35 @@ window.addEventListener("online", function(){
           'Content-Type': 'application/json'
         }
       }).then(function (review) {
-        return review.json();
-      }).then(function (data) {
+        fetch('http://localhost:1337/reviews/?restaurant_id=${review.restaurant_id}')
+        .then(function(res){
+          return res.json()
+        }).then(function(data){
+          console.log(data)
+          const reviews = data;
+          const container = document.getElementById('reviews-container');
+          const title = document.createElement('h2');
+          title.innerHTML = 'Reviews';
+          container.appendChild(title);
+
+          const ul = document.getElementById('reviews-list');
+          //console.log(reviews)
+          reviews.forEach(review => {
+            ul.appendChild(createReviewHTML(review));
+          });
+          container.appendChild(ul);
+
+        })
+        location.reload()
+
       })
     })
   })
+
+
+
+
+
 //    }).catch(function (err) { console.error(err); })
 //    )
 //  })
