@@ -301,25 +301,10 @@ window.addEventListener("online", function(){
           'Content-Type': 'application/json'
         }
       }).then(function (review) {
-        fetch('http://localhost:1337/reviews/?restaurant_id=${review.restaurant_id}')
-        .then(function(res){
-          return res.json()
-        }).then(function(data){
-          console.log(data)
-          const reviews = data;
-          const container = document.getElementById('reviews-container');
-          const title = document.createElement('h2');
-          title.innerHTML = 'Reviews';
-          container.appendChild(title);
+        //fetch('http://localhost:1337/reviews/?restaurant_id=${review.restaurant_id}')
 
-          const ul = document.getElementById('reviews-list');
-          //console.log(reviews)
-          reviews.forEach(review => {
-            ul.appendChild(createReviewHTML(review));
-          });
-          container.appendChild(ul);
+          idb.deleteReview()
 
-        })
         location.reload()
 
       })

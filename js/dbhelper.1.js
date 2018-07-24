@@ -156,6 +156,15 @@ function(){
 
 
    }
+   function deleteReview(){
+        return dbPromise.then(function(db) {
+        var tx = db.transaction('user_review', 'readwrite');
+        var store = tx.objectStore('user_review');
+        store.clear();
+      }).then(function() {
+        console.log('Item deleted');
+      });
+   }
    function test(id){
 
      return id+" here";
@@ -207,6 +216,7 @@ function(){
       addReviewsByRestId: (addReviewsByRestId),
       addUserReview: (addUserReview),
       getUserReview: (getUserReview),
+      deleteReview:(deleteReview),
       test:(test)
      }
 
